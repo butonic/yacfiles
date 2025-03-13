@@ -1,6 +1,6 @@
 # yacfiles
 
-I'm using this repo to reproduce some of the bugs encountered in the wild or the opencloud CI. It is organized as follows:
+I'm using this repo to reproduce some of the bugs encountered in the wild or the opencloud CI using [httpyac](https://httpyac.github.io). It is organized as follows:
 
 ```
 ❯ tree
