@@ -1,0 +1,13 @@
+
+### get personal drive
+# @name personaldrive
+GET {{host}}/graph/v1.0/me/drive?$select=id
+Authorization: Basic {{username}}:{{password}}
+
+?? status == 200
+
+### list contents of personal drive
+PROPFIND {{host}}/remote.php/dav/spaces/{{personaldrive.id}}
+Authorization: Basic {{username}}:{{password}}
+
+?? status == 207 Multi-Status

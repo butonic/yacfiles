@@ -1,0 +1,70 @@
+### Given user "Alice" has been created with default attributes
+# @name user
+POST {{host}}/graph/v1.0/users
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "onPremisesSamAccountName": "alice",
+  "displayName": "Alice Hansen",
+  "mail": "alice@example.org",
+  "passwordProfile": {
+    "password": "123456"
+  }
+}
+
+?? status == 201
+
+### get personal drive
+# @name personaldrive
+GET {{host}}/graph/v1.0/me/drive?$select=id
+Authorization: Basic alice 123456
+
+### And user "Alice" has created folder "/upload"
+MKCOL {{host}}/remote.php/dav/spaces/{{personaldrive.id}}/upload
+Authorization: Basic alice 123456
+
+?? status == 201
+
+### And user "Alice" has created folder "/upload/sub"
+MKCOL {{host}}/remote.php/dav/spaces/{{personaldrive.id}}/upload/sub
+Authorization: Basic alice 123456
+
+?? status == 201
+
+### And user "Alice" has uploaded file with content "uploaded content" to "/upload/sub/file.txt"
+PUT {{host}}/remote.php/dav/spaces/{{personaldrive.id}}/upload/sub/file.txt
+Authorization: Basic alice 123456
+Content-Type: text/plain
+
+uploaded content
+
+?? status == 201
+
+### And user "Alice" has deleted file "/upload"
+DELETE {{host}}/remote.php/dav/spaces/{{personaldrive.id}}/upload
+Authorization: Basic alice 123456
+
+?? status == 204
+# When user "Alice" restores the file with original path "/upload/sub/file.txt" using the trashbin API
+### listTrashbinFolder
+# @name trashBin
+PROPFIND {{host}}/remote.php/dav/spaces/trash-bin/{{personaldrive.id}}
+Authorization: Basic alice 123456
+
+?? status == 207
+
+### sendUndeleteRequest
+@xpath_ns d = DAV:
+MOVE {{host}}{{$xpath:trashBin //d:response[2]/d:href}}/sub/file.txt
+Authorization: Basic alice 123456
+Destination: {{host}}/remote.php/dav/spaces/{{personaldrive.id}}/file.txt
+
+# Then the HTTP status code should be "201"
+?? status == 201
+
+### Delete created user
+DELETE {{host}}/graph/v1.0/users/{{user.id}}
+Authorization: Basic {{username}} {{password}}
+
+?? status == 204

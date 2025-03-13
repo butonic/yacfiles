@@ -1,0 +1,12 @@
+POST {{host}}/graph/v1.0/users
+Authorization: Basic admin admin
+Content-Type: application/json
+
+{
+  "onPremisesSamAccountName": "bob",
+  "displayName": "bob",
+  "mail": "bob@bob.de",
+  "passwordProfile": {
+    "password": "123"
+  }
+}

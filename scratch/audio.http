@@ -1,0 +1,13 @@
+
+GET {{host}}/graph/v1.0/me/drives
+Authorization: Basic {{username}} {{password}}
+
+###
+
+GET {{host}}/graph/v1.0/drives/107d9c13-e067-48cd-babb-4baf777ed4c8$8c616bdc-77b0-4ddd-9c9f-7f5c32398b89/items/107d9c13-e067-48cd-babb-4baf777ed4c8$8c616bdc-77b0-4ddd-9c9f-7f5c32398b89/children
+Authorization: Basic {{username}} {{password}}
+
+###
+
+GET {{host}}/graph/v1.0/drives/107d9c13-e067-48cd-babb-4baf777ed4c8$8c616bdc-77b0-4ddd-9c9f-7f5c32398b89/items/107d9c13-e067-48cd-babb-4baf777ed4c8$8c616bdc-77b0-4ddd-9c9f-7f5c32398b89!539d9fa2-8dae-41e7-920e-9ff7ed254f64/children?$select=audio
+Authorization: Basic {{username}} {{password}}

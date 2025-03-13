@@ -1,0 +1,2 @@
+GET {{host}}/graph/v1.0/me/drives
+Authorization: Basic {{username}} {{password}}

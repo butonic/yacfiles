@@ -1,0 +1,5 @@
+// @title list legacy home
+PROPFIND {{host}}/remote.php/webdav
+Authorization: Basic {{username}}:{{password}}
+
+?? status == 207 Multi-Status

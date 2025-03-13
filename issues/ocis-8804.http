@@ -1,0 +1,67 @@
+### https://github.com/owncloud/ocis/issues/8804
+// @title initiate first upload
+// @name upload1
+
+{{
+  filename = new Buffer($random.alphabetic(50)+'.test', 'utf-8').toString('base64');
+}}
+
+POST {{baseUrl}}/remote.php/webdav
+Tus-Resumable: 1.0.0
+Upload-Length: 10
+Upload-Metadata: filename {{filename}}, mtime 1712677748, filetype application/zip,
+Content-Length: 0
+Authorization: Basic {{username}}:{{password}}
+
+?? status == 201 Created
+
+{{
+  uploadlocation1 = response.headers.location;
+}}
+
+###
+// @title initiate second upload
+// @name upload2
+POST {{baseUrl}}/remote.php/webdav
+Tus-Resumable: 1.0.0
+Upload-Length: 10
+Upload-Metadata: filename {{filename}}, mtime 1712677748, filetype application/zip,
+Content-Length: 0
+Authorization: Basic {{username}}:{{password}}
+
+?? status == 201 Created
+
+{{
+  uploadlocation2 = response.headers.location;
+}}
+
+###
+// @title finish second upload
+// @name patch2
+// @ref upload2
+PATCH {{uploadlocation2}}
+Tus-Resumable: 1.0.0
+Content-Length: 10
+Upload-Offset: 0
+Content-Type: application/offset+octet-stream
+
+1234567890
+
+
+?? status == 204 No Content
+
+###
+// @title finish first upload
+// @description This request should fail because another upload has created the same file.
+// @name patch1
+// @ref upload1
+PATCH {{uploadlocation1}}
+Tus-Resumable: 1.0.0
+Content-Length: 10
+Upload-Offset: 0
+Content-Type: application/offset+octet-stream
+
+1234567890
+
+
+?? status == 409 Precondtion Failed

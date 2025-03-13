@@ -1,0 +1,21 @@
+# https://github.com/opencloud-eu/opencloud/issues/275
+
+# 1. create folder f1
+# @no-reject-unauthorized
+MKCOL {{host}}/remote.php/dav/spaces/storage-users-1%2475952dc9-91b6-46e6-82fa-528ff2bb17c7!75952dc9-91b6-46e6-82fa-528ff2bb17c7/f1
+Authorization: Basic {{username}} {{password}}
+
+###
+# @no-reject-unauthorized
+# rename folder to new_name (or move to another folder)
+
+MOVE {{host}}/remote.php/dav/spaces/{{personalSpace}}/f1
+Authorization: Basic {{username}} {{password}}
+Destination: {{host}}/remote.php/dav/spaces/{{personalSpace}}/new_name
+###
+# @no-reject-unauthorized
+
+# request original folder again
+
+PROPFIND {{host}}/remote.php/dav/spaces/{{personalSpace}}/f1
+Authorization: Basic {{username}} {{password}}
